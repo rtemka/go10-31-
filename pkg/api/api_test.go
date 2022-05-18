@@ -142,7 +142,7 @@ func TestHandlers(t *testing.T) {
 		}
 
 		if !bytes.Equal(expected.Bytes(), got) {
-			t.Fatalf("expected to receive data [%s], got [%s]", expected, got)
+			t.Fatalf("expected to receive data [%s], got [%s]", string(expected.Bytes()), string(got))
 		}
 	})
 }
