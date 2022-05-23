@@ -200,7 +200,7 @@ func (api *Api) putPostHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// putPostHandler обработчик для метода DELETE
+// deletePostHandler обработчик для метода DELETE
 func (api *Api) deletePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	var post storage.Post
