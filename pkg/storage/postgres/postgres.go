@@ -200,7 +200,7 @@ func (p *Postgres) DeletePost(post storage.Post) error {
 
 func (p *Postgres) testCleanUp() error {
 
-	b, err := os.ReadFile("testCleanUp.sql")
+	b, err := os.ReadFile("testdata/testCleanUp.sql")
 	if err != nil {
 		return err
 	}

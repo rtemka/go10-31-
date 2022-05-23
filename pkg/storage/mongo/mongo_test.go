@@ -50,18 +50,18 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
-func TestPosts(t *testing.T) {
+func TestMongo_Posts(t *testing.T) {
 	posts, err := testMongoDB.Posts()
 	if err != nil {
-		t.Fatalf("expected to get db data, got error [%v]\n", err)
+		t.Fatalf("mongo.Posts() = error %v\n", err)
 	}
 
 	if len(posts) != len(testData) {
-		t.Fatalf("expected to get %d db data in total, got [%d]\n", len(testData), len(posts))
+		t.Fatalf("mongo.Posts() = %d posts in total, want %d\n", len(posts), len(testData))
 	}
 }
 
-func TestAddPost(t *testing.T) {
+func TestMongo_AddPost(t *testing.T) {
 	newpost := storage.Post{
 		Id:        3,
 		Title:     "Mongo test post 1",
@@ -71,20 +71,20 @@ func TestAddPost(t *testing.T) {
 	}
 	err := testMongoDB.AddPost(newpost)
 	if err != nil {
-		t.Fatalf("expected to get db data, got error [%v]\n", err)
+		t.Fatalf("mongo.AddPost() = error %v\n", err)
 	}
 
 	post, err := testMongoDB.getPostById(newpost.Id)
 	if err != nil {
-		t.Fatalf("expected to get db data, got error [%v]\n", err)
+		t.Fatalf("mongo.getPostById() = error %v\n", err)
 	}
 
 	if post != newpost {
-		t.Fatalf("expected to get created db data %v, got %v\n", newpost, post)
+		t.Fatalf("mongo.AddPost() = %v, want %v\n", post, newpost)
 	}
 }
 
-func TestUpdatePost(t *testing.T) {
+func TestMongo_UpdatePost(t *testing.T) {
 	newpost := storage.Post{
 		Id:        1,
 		Title:     "Mongo updated test post 1",
@@ -94,31 +94,31 @@ func TestUpdatePost(t *testing.T) {
 	}
 	err := testMongoDB.UpdatePost(newpost)
 	if err != nil {
-		t.Fatalf("expected to get db data, got error [%v]\n", err)
+		t.Fatalf("mongo.UpdatePost() = error %v\n", err)
 	}
 
 	post, err := testMongoDB.getPostById(newpost.Id)
 	if err != nil {
-		t.Fatalf("expected to get db data, got error [%v]\n", err)
+		t.Fatalf("mongo.getPostById() = error %v\n", err)
 	}
 
 	if post != newpost {
-		t.Fatalf("expected to get updated db data %v, got %v\n", newpost, post)
+		t.Fatalf("mongo.UpdatePost() = %v, want %v\n", post, newpost)
 	}
 }
 
-func TestDeletePost(t *testing.T) {
+func TestMongo_DeletePost(t *testing.T) {
 
 	err := testMongoDB.DeletePost(storage.Post{Id: 1})
 	if err != nil {
-		t.Fatalf("expected to get db data, got error [%v]\n", err)
+		t.Fatalf("mongo.DeletePost() = error %v\n", err)
 	}
 
 	post, err := testMongoDB.getPostById(1)
 	if err != nil && err != ErrNoDocuments {
-		t.Fatalf("got error while deleting from DB [%v]\n", err)
+		t.Fatalf("mongo.getPostById() = error %v\n", err)
 	}
 	if post != (storage.Post{}) {
-		t.Fatalf("expected to get no documents, got [%v]\n", post)
+		t.Fatalf("mongo.DeletePost() = %v, want nothing\n", post)
 	}
 }

@@ -39,18 +39,18 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
-func TestPosts(t *testing.T) {
+func TestPostgres_Posts(t *testing.T) {
 	posts, err := db.Posts()
 	if err != nil {
-		t.Fatalf("expected to get posts, got error [%v]\n", err)
+		t.Fatalf("postgres.Posts() = error %v\n", err)
 	}
 
 	if len(posts) != postsNum {
-		t.Fatalf("expected to get %d posts in total, got [%d]\n", postsNum, len(posts))
+		t.Fatalf("postgres.Posts() = %d posts in total, want %d\n", len(posts), postsNum)
 	}
 }
 
-func TestAddPost(t *testing.T) {
+func TestPostgres_AddPost(t *testing.T) {
 	newpost := storage.Post{
 		Id:        3,
 		Author:    storage.Author{Id: 1, Name: "Иван Иванов"},
@@ -60,20 +60,20 @@ func TestAddPost(t *testing.T) {
 	}
 	err := db.AddPost(newpost)
 	if err != nil {
-		t.Fatalf("expected to create post, got error [%v]\n", err)
+		t.Fatalf("postgres.AddPost() = error %v\n", err)
 	}
 
 	post, err := db.getPost(newpost.Id)
 	if err != nil {
-		t.Fatalf("expected to get post, got error [%v]\n", err)
+		t.Fatalf("postgres.getPost() = error %v\n", err)
 	}
 
 	if post != newpost {
-		t.Fatalf("expected to get created post %v, got %v\n", newpost, post)
+		t.Fatalf("postgres.AddPost() = %v, want %v\n", post, newpost)
 	}
 }
 
-func TestUpdatePost(t *testing.T) {
+func TestPostgres_UpdatePost(t *testing.T) {
 	newpost := storage.Post{
 		Id:        1,
 		Author:    storage.Author{Id: 2, Name: "Петр Петров"},
@@ -83,31 +83,31 @@ func TestUpdatePost(t *testing.T) {
 	}
 	err := db.UpdatePost(newpost)
 	if err != nil {
-		t.Fatalf("expected to update post, got error [%v]\n", err)
+		t.Fatalf("postgres.UpdatePost() = error %v\n", err)
 	}
 
 	post, err := db.getPost(newpost.Id)
 	if err != nil {
-		t.Fatalf("expected to get posts, got error [%v]\n", err)
+		t.Fatalf("postgres.getPost() = error %v\n", err)
 	}
 
 	if post != newpost {
-		t.Fatalf("expected to get updated post %v, got %v\n", newpost, post)
+		t.Fatalf("postgres.UpdatePost() = %v, want %v\n", post, newpost)
 	}
 }
 
-func TestDeletePost(t *testing.T) {
+func TestPostgres_DeletePost(t *testing.T) {
 	p := storage.Post{Id: 1}
 	err := db.DeletePost(p)
 	if err != nil {
-		t.Fatalf("expected to delete post, got error [%v]\n", err)
+		t.Fatalf("postgres.DeletePost() = error %v\n", err)
 	}
 
 	post, err := db.getPost(p.Id)
 	if err != nil && err != ErrNoRows {
-		t.Fatalf("got error while deleting from DB [%v]\n", err)
+		t.Fatalf("postgres.getPost() = error %v\n", err)
 	}
 	if post != (storage.Post{}) {
-		t.Fatalf("expected to get no rows, got [%v]\n", post)
+		t.Fatalf("postgres.DeletePost() = %v, want nothing\n", post)
 	}
 }
